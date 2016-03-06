@@ -1,0 +1,26 @@
+language: python
+sudo: false
+
+env:
+  - LUA="lua=5.1", LUA_VERSION="lua5.1"
+  - LUA="lua=5.2", LUA_VERSION="lua5.2"
+  - LUA="lua=5.3", LUA_VERSION="lua5.3"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+
+install:
+  - luarocks install luacheck
+  - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+
+script:
+  - gcc -shared -o benchmarklib.so -fPIC -O2 benchmarklib.c -I/usr/include/$LUA_VERSION -Wall -Wextra -l$LUA_VERSION
+  - luacheck --std max+busted *.lua spec
+  - busted --verbose --coverage
+
+after_success:
+  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
