@@ -35,4 +35,28 @@ describe('benchmark', function()
             take(time)
         end) > time)
     end)
+
+    it('call bm to get a bm reporter', function()
+        -- check the default label_width and format
+        assert.are.same(bm.bm().label_width, bm.LABEL_WIDTH)
+        assert.are.same(bm.bm().format, bm.FORMAT)
+
+        assert.are.same(bm.bm(10).label_width, 10)
+        local FORMAT = '%-2.3s %.3u %0.3t %r';
+        assert.are.same(bm.bm(10, FORMAT).format, FORMAT)
+        -- test no_gc
+        bm.bm(bm.LABEL_WIDTH, bm.FORMAT, true)
+    end)
+
+    it('use Reporter to report', function()
+        local reporter = bm.bm(bm.LABEL_WIDTH, '%-2.1s %.2u %.3t %r')
+        reporter:report(function() end, 'test')
+    end)
+
+    it('bm should check the label_width can be an integer or not', function()
+        assert.is_false(pcall(bm.bm, 3.76))
+        assert.is_false(pcall(bm.bm, '3.76'))
+        assert.is_true(pcall(bm.bm, 3.0))
+        assert.is_true(pcall(bm.bm, '3'))
+    end)
 end)
