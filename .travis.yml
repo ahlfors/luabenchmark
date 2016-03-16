@@ -2,9 +2,9 @@ language: python
 sudo: false
 
 env:
-  - LUA="lua=5.1", LUA_VERSION="lua5.1"
-  - LUA="lua=5.2", LUA_VERSION="lua5.2"
-  - LUA="lua=5.3", LUA_VERSION="lua5.3"
+  - LUA="lua=5.1"
+  - LUA="lua=5.2"
+  - LUA="lua=5.3"
 
 before_install:
   - pip install hererocks
@@ -18,8 +18,8 @@ install:
   - luarocks install luacov-coveralls
 
 script:
-  - gcc -shared -o benchmarklib.so -fPIC -O2 benchmarklib.c -I/usr/include/$LUA_VERSION -Wall -Wextra -l$LUA_VERSION
-  - luacheck --std max+busted *.lua spec
+  - gcc -shared -o benchmarklib.so -fPIC -O2 benchmarklib.c -I/usr/include/ -Wall -Wextra -l$LUA_VERSION
+  - luacheck --std max+busted *.lua
   - busted --verbose --coverage
 
 after_success:

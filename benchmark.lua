@@ -1,7 +1,6 @@
 local benchmarklib = require 'benchmarklib'
 local cpu_clock = benchmarklib.cpu_clock
 local wall_clock = benchmarklib.wall_clock
-local difftime = os.difftime
 
 local _M = {
     _VERSION = '0.1.0',
@@ -66,6 +65,15 @@ function Reporter:new(label_width, format, no_gc)
     return setmetatable({label_width=label_width, format=format, no_gc=no_gc}, self)
 end
 
+local function time_fmt_to_numeric_fmt(time_fmt)
+    local ch = {'s', 'u', 't', 'r'}
+    local numeric_fmt = time_fmt
+    for i = 1, #ch do
+        numeric_fmt = string.gsub(numeric_fmt, '(%%[0-9%.%-]*)' .. ch[i], '%1f')
+    end
+    return numeric_fmt
+end
+
 function Reporter:report(func, label)
     if self.no_gc then collectgarbage('stop') end
     local tms = _M.measure(func, label)
@@ -90,15 +98,6 @@ function _M.bm(label_width, format, no_gc)
     end
     format = format or _M.FORMAT
     return Reporter:new(width, format, no_gc)
-end
-
-function time_fmt_to_numeric_fmt(time_fmt)
-    local ch = {'s', 'u', 't', 'r'}
-    local numeric_fmt = time_fmt
-    for i = 1, #ch do
-        numeric_fmt = string.gsub(numeric_fmt, '(%%[0-9%.%-]*)' .. ch[i], '%1f')
-    end
-    return numeric_fmt
 end
 
 return _M

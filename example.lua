@@ -15,14 +15,14 @@ reporter:report(function()
 end, 'for range')
 
 reporter:report(function()
-    for i, v in ipairs(ary) do
+    for i in ipairs(ary) do
         ary[i] = i
     end
 end, 'for ipairs')
 
 reporter:report(function()
     for k, v in pairs(ary) do
-        ary[k] = i
+        ary[k] = v
     end
 end, 'for pairs')
 
