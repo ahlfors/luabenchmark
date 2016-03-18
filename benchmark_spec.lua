@@ -1,8 +1,8 @@
 local bm = require './benchmark'
 
 local function take(secs)
-  local t0 = os.clock()
-  while os.difftime(os.clock() - t0) <= secs do end
+  local t0 = os.time()
+  while os.difftime(os.time(), t0) <= secs do end
 end
 
 describe('benchmark', function()
@@ -15,11 +15,12 @@ describe('benchmark', function()
         local res = bm.measure(function()
             take(time)
         end, 'test')
+        print(res)
         assert.are.same(res.label, 'test')
         assert.is_true(res.real > time)
         assert.is_true(res.total > time)
-        assert.is_true(res.stime > 0)
-        assert.is_true(res.utime > 0)
+        assert.is_true(res.stime >= 0)
+        assert.is_true(res.utime >= 0)
         assert.is_true(res.stime + res.utime == res.total)
     end)
 

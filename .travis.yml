@@ -8,7 +8,7 @@ env:
 
 before_install:
   - pip install hererocks
-  - hererocks lua_install -r^ --$LUA
+  - hererocks lua_install -r^ --$LUA # install all stuff into ./lua_install
   - export PATH=$PATH:$PWD/lua_install/bin
 
 install:
@@ -18,9 +18,9 @@ install:
   - luarocks install luacov-coveralls
 
 script:
-  - gcc -shared -o benchmarklib.so -fPIC -O2 benchmarklib.c -I/usr/include/ -Wall -Wextra -l$LUA_VERSION
+  - luarocks make --local
   - luacheck --std max+busted *.lua
-  - busted --verbose --coverage
+  - busted --verbose --coverage ./benchmark_spec.lua
 
 after_success:
   - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
