@@ -1,11 +1,16 @@
+--- a tiny library for benchmark
+-- @author spacewander
+-- @license MIT
+-- @module benchmark
 local benchmarklib = require 'benchmarklib'
 local cpu_clock = benchmarklib.cpu_clock
 local wall_clock = benchmarklib.wall_clock
 
 local _M = {
     _VERSION = '0.1.0',
-    -- FORMAT will be used in string.format
+    --- default format
     FORMAT = "system: %0.3s\tuser: %0.3u\ttotal: %0.3t\treal: %0.3r",
+    --- default width of label
     LABEL_WIDTH = 0
 }
 
@@ -23,23 +28,31 @@ mt.__tostring = function(self)
         self.label, self.stime, self.utime, self.total, self.real)
 end
 
--- Create a Tms table.
+--- Create a Tms table.
 -- Tms contains below fields:
+--
 -- * label, default ''
 -- * stime system CPU time, default 0.0
 -- * utime user CPU time, default 0.0
 -- * real wall time, default 0.0
 -- * total stime+utime
 --
--- You can call like this: Tms{stime=2.0}
--- And it will return Tms{label='', stime=2.0, utime=0.0, total=2.0, real=0.0}
+-- @usage
+-- Tms{stime=2.0}
+-- => Tms{label='', stime=2.0, utime=0.0, total=2.0, real=0.0}
 function _M.Tms(args)
     setmetatable(args, mt)
     args.total = args.stime + args.utime
     return args
 end
 
--- Returns the time used to execute the given function as a Tms table.
+--- Returns the time used to execute the given function as a Tms table.
+-- @return a Tms table
+--
+-- @usage
+-- print(bm.measure(function()
+--   table.sort(ary)
+-- end))
 function _M.measure(func, label)
     local stime0, utime0 = cpu_clock()
     local real = _M.realtime(func)
@@ -51,7 +64,12 @@ function _M.measure(func, label)
            }
 end
 
--- Returns the elapsed real time used to execute the given function
+--- Returns the elapsed real time used to execute the given function
+--
+-- @usage
+-- print(bm.realtime(function()
+--   table.sort(ary)
+-- end))
 function _M.realtime(func)
     local t0 = wall_clock()
     func()
@@ -84,12 +102,21 @@ function Reporter:report(func, label)
     print(output)
 end
 
--- Return a reporter to report given benchmark cases.
--- If `no_gc` is not false, it will stop GC while running cases.
--- This reporter will reserve `label_width` leading spaces for labels on each line,
--- and use `format` to format each line.
--- `format` is a C-style format string like '%.3s\t%.3u\t%.3t\t%.3r',
+--- Return a reporter to report given benchmark cases.
+-- If **no_gc** is not false, it will stop GC while running cases.
+-- This reporter will reserve **label_width** leading spaces for labels on each line,
+-- and use **format** to format each line.
+-- **format** is a C-style format string like '%.3s\t%.3u\t%.3t\t%.3r',
 -- where '%s' means system, '%u' means user, '%t' means total, '%r' means real
+--
+-- @usage
+-- local reporter = bm.bm(10, bm.FORMAT, true)
+-- reporter:report(function()
+--   local size = #ary
+--   for i = 1, size do
+--      ary[i] = 0
+--   end
+-- end, 'count up the size first')
 function _M.bm(label_width, format, no_gc)
     label_width = label_width or _M.LABEL_WIDTH
     local width = tonumber(label_width)
