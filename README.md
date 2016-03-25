@@ -1,4 +1,6 @@
 # luabenchmark
+
+[![Build Status](https://api.travis-ci.org/spacewander/luabenchmark.svg?branch=master)](http://travis-ci.org/spacewander/luabenchmark)
 A tiny library for benchmark.
 
 ## doc
@@ -14,7 +16,7 @@ local bm = require './benchmark'
 local reporter = bm.bm(6)
 ```
 
-1. use locals
+### use locals
 
 ```
 reporter:report(function()
@@ -34,7 +36,7 @@ end, 'fast')
 --fast   system: 0.110    user: 0.000 total: 0.110    real: 0.109
 ```
 
-2. pre-create table space
+### pre-create table space
 
 ```
 reporter:report(function()
@@ -55,7 +57,7 @@ slow   system: 0.810    user: 0.000 total: 0.810    real: 0.813
 fast   system: 0.350    user: 0.000 total: 0.350    real: 0.354
 ```
 
-3. use table.concat to concat strings in a loop
+### use table.concat to concat strings in a loop
 
 ```
 reporter:report(function()
@@ -77,7 +79,7 @@ slow   system: 5.120    user: 2.860 total: 7.980    real: 7.998
 fast   system: 0.030    user: 0.000 total: 0.030    real: 0.030
 ```
 
-4. reduce, reuse, recycle
+### reduce, reuse, recycle
 
 ```
 reporter:report(function()
