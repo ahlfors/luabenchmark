@@ -23,14 +23,14 @@ static int API(cpu_clock)(lua_State *L) {
                         ssys.wHour * 3600 +
                         ssys.wMinute * 60 +
                         ssys.wSecond + 
-                        ssys.wMilliseconnds / 1000))
+                        ssys.wMilliseconds / 1000));
         }
         if (FileTimeToSystemTime(&fuser, &suser)) {
             lua_pushnumber(L, (lua_Number)(
                         suser.wHour * 3600 +
                         suser.wMinute * 60 +
                         suser.wSecond + 
-                        suser.wMilliseconnds / 1000))
+                        suser.wMilliseconds / 1000));
         }
     }
     return 2;
@@ -38,8 +38,8 @@ static int API(cpu_clock)(lua_State *L) {
 
 static int API(wall_clock)(lua_State *L) {
     LARGE_INTEGER time, freq;
-    if (QueryPerformanceFrequenncy(&freq) && 
-            QueryPerformannceCounter(&time)) {
+    if (QueryPerformanceFrequency(&freq) && 
+            QueryPerformanceCounter(&time)) {
         lua_pushnumber(L, (lua_Number)time.QuadPart / freq.QuadPart);
     }
     return 1;

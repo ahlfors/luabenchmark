@@ -1,8 +1,8 @@
 package = "luabenchmark"
-version = "0.9.0-1"
+version = "0.9.0-2"
 source = {
-    url = "git://github.com/spacewander/luabenchmark.git",
-    dir = "luabenchmark-0.9.0-1"
+    url = "git://github.com/spacewander/luabenchmark",
+    tag = "0.9.0"
 }
 description = {
     summary = "A tiny benchmark library",
@@ -20,7 +20,10 @@ build = {
     modules = {
         benchmarklib = {
             sources = {"benchmarklib.c"},
-            libraries = {"rt"}
         }
-    }
+    },
+    -- Override default build options (per platform)
+    platforms = {
+        unix = { modules = { benchmarklib = { libraries = {"rt"} } } }
+    },
 }
