@@ -22,15 +22,15 @@ static int API(cpu_clock)(lua_State *L) {
             lua_pushnumber(L, (lua_Number)(
                         ssys.wHour * 3600 +
                         ssys.wMinute * 60 +
-                        ssys.wSecond + 
-                        ssys.wMilliseconds / 1000));
+                        ssys.wSecond) +
+                        (lua_Number)(ssys.wMilliseconds) / 1000);
         }
         if (FileTimeToSystemTime(&fuser, &suser)) {
             lua_pushnumber(L, (lua_Number)(
                         suser.wHour * 3600 +
                         suser.wMinute * 60 +
-                        suser.wSecond + 
-                        suser.wMilliseconds / 1000));
+                        suser.wSecond) +
+                        (lua_Number)(suser.wMilliseconds) / 1000);
         }
     }
     return 2;
