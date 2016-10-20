@@ -64,9 +64,4 @@ before_test:
 test_script:
 - echo "Testing..."
 - luacheck --std max+busted .\benchmark.lua .\benchmark_spec.lua
-- busted --verbose --coverage .\benchmark_spec.lua
-
-after_test:
-  - if "%LUA_VER:~0,3%"=="5.1" (luarocks show bit32 || luarocks install bit32)
-  - luarocks show luacov-coveralls || luarocks install luacov-coveralls
-  - luacov-coveralls -v -e c:\lua -c spec\.luacov
+- busted --verbose .\benchmark_spec.lua
