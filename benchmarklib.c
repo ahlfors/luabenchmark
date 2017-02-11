@@ -49,15 +49,47 @@ static int API(wall_clock)(lua_State *L) {
 #include <time.h>
 #include <unistd.h>
 
+#ifdef __MACH__  // macOS
+#include <mach/mach_time.h>
+#include <mach/mach.h>
+#include <mach/clock.h>
+
+#define CLOCK_MONOTONIC 1
+
+// typdef POSIX clockid_t
+typedef int clockid_t;
+
+// mach clock port
+extern mach_port_t clock_port;
+
+int clock_gettime(clockid_t id, struct timespec *tspec) {
+    mach_timespec_t mts;
+    int retval = 0;
+
+    if (id == CLOCK_MONOTONIC) {
+        retval = clock_get_time(clock_port, &mts);
+        if (retval != 0) {
+            return retval;
+        }
+        tspec->tv_sec = mts.tv_sec;
+        tspec->tv_nsec = mts.tv_nsec;
+    } else {
+        // only CLOCK_MONOTOIC clocks supported
+        return -1;
+    }
+    return 0;
+}
+#endif //__MACH__
+
 /*
  * return system time and user time of CPU
  */
 static int API(cpu_clock)(lua_State *L) {
-    int CLK_TCK = sysconf(_SC_CLK_TCK);
+    int clk_tck = sysconf(_SC_CLK_TCK);
     struct tms buf;
     times(&buf);
-    lua_pushnumber(L, ((lua_Number)buf.tms_stime/CLK_TCK));
-    lua_pushnumber(L, ((lua_Number)buf.tms_utime/CLK_TCK));
+    lua_pushnumber(L, ((lua_Number)buf.tms_stime/clk_tck));
+    lua_pushnumber(L, ((lua_Number)buf.tms_utime/clk_tck));
     return 2;
 }
 
