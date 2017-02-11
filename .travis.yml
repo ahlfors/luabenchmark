@@ -1,5 +1,7 @@
-language: python
 sudo: false
+os:
+  - linux
+  - osx
 
 env:
   - LUA="lua=5.1"
@@ -7,8 +9,8 @@ env:
   - LUA="lua=5.3"
 
 before_install:
-  - pip install hererocks
-  - hererocks lua_install -r^ --$LUA # install all stuff into ./lua_install
+  - pip install --user hererocks
+  - python -m hererocks lua_install -r^ --$LUA # install all stuff into ./lua_install
   - export PATH=$PATH:$PWD/lua_install/bin
 
 install:
