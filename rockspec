@@ -24,6 +24,6 @@ build = {
     },
     -- Override default build options (per platform)
     platforms = {
-        unix = { modules = { benchmarklib = { libraries = {"rt"} } } }
+        linux = { modules = { benchmarklib = { libraries = {"rt"} } } }
     },
 }
