@@ -1,8 +1,8 @@
 package = "luabenchmark"
-version = "0.9.0-2"
+version = "0.10.0-1"
 source = {
     url = "git://github.com/spacewander/luabenchmark",
-    tag = "0.9.0"
+    tag = "0.10.0"
 }
 description = {
     summary = "A tiny benchmark library",
