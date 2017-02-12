@@ -18,6 +18,7 @@ dependencies = {
 build = {
     type = "builtin",
     modules = {
+        benchmark = "benchmark.lua",
         benchmarklib = {
             sources = {"benchmarklib.c"},
         }
